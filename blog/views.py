@@ -33,6 +33,7 @@ from django.template import RequestContext
 #
 #     return render_to_response('blog/post_list.html', {'posts': posts})
 
+from django.contrib.auth.decorators import login_required
 
 
 def post_list(request):
@@ -47,9 +48,9 @@ def post_detail(request,pk):
 
 
 from forms import PostForm
-def post_new(request):
-    form = PostForm()
-    return render(request, 'blog/post_edit.html', {'form': form})
+# def post_new(request):
+#     form = PostForm()
+#     return render(request, 'blog/post_edit.html', {'form': form})
 
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
@@ -63,6 +64,7 @@ def post_new(request):
     else:
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form': form})
+
 
 def post_edit(request, pk):
     post = get_object_or_404(Post, pk=pk)
@@ -91,3 +93,14 @@ def post_remove(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
     return redirect('blog:post_index')
+
+
+#搜索定义
+from haystack.forms import SearchForm
+def full_search(request):
+    """全局搜索"""
+    keywords = request.GET['q']
+    sform = SearchForm(request.GET)
+    posts = sform.search()
+    return render(request, 'blog/post_search_list.html',
+                  {'posts': posts, 'list_header': '关键字 \'{}\' 搜索结果'.format(keywords)})

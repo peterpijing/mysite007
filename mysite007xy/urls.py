@@ -16,7 +16,12 @@ Including another URLconf
 from django.conf.urls import url,include
 from django.contrib import admin
 
+from blog.views import full_search
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('blog.urls',namespace='blog')),
+
+    url(r'^search/', full_search,include('haystack.urls'),name='blog.views.full_search'),
+
 ]

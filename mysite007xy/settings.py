@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     'blog',
     'pagination',
+
+    'haystack',
 ]
 
 MIDDLEWARE = [
@@ -130,4 +132,28 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
+)
+
+
+LOGIN_REDIRECT_URL = '/'
+
+# full text search
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'blog.whoosh_cn_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+
+
+from django.utils.translation import ugettext_lazy as _
+LANGUAGES = (
+    ('zh-cn', _('Simplified Chinese')),
+    ('en', _('English')),
+)
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, "locale"),
 )
